@@ -1,69 +1,81 @@
-use std::{collections::HashSet, fmt::Debug};
+use std::{
+    collections::{HashMap, HashSet},
+    fmt::Debug,
+};
 
 #[derive(PartialEq, Eq, Hash)]
-enum Phoneme{
-    PulmonicConsonant(PulmonicConsonant),
-}
-
-#[derive(PartialEq, Eq, Hash)]
-enum PulmonicConsonant{
+enum Phoneme {
     VoicelessBilabialNasal,
     ///m
     VoicedBilabialNasal,
     VoicedLabiodentalNasal,
     VoicedLinguolabialNasal,
 }
-impl ToString for PulmonicConsonant{
-    fn to_string(&self) -> String {
-        match self{
-            PulmonicConsonant::VoicelessBilabialNasal => "m̥",
-            PulmonicConsonant::VoicedBilabialNasal => "m",
-            PulmonicConsonant::VoicedLabiodentalNasal => "ɱ",
-            PulmonicConsonant::VoicedLinguolabialNasal => "n̼",
-        }.to_string()
-    }
-}
 
-impl Debug for Phoneme{
+impl Debug for Phoneme {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", match self {
-            Self::PulmonicConsonant(p) => p.to_string(),
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                Phoneme::VoicelessBilabialNasal => "m̥",
+                Phoneme::VoicedBilabialNasal => "m",
+                Phoneme::VoicedLabiodentalNasal => "ɱ",
+                Phoneme::VoicedLinguolabialNasal => "n̼",
+            }
+            .to_string()
+        )
     }
 }
 
+type Romanization = HashMap<Phoneme, String>;
 
-impl Debug for PulmonicConsonant{
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.to_string())
-    }
-}
-
-trait Romanization{
-    fn romanize(phoneme: Phoneme) -> String;
-}
-
-struct ProtoLanguage{
+struct ProtoLanguage {
     phonology: HashSet<Phoneme>,
+    dictionary: Vec<DictionaryEntry>,
 }
 
-enum Evolutions{
+enum Evolutions {
     Phonetic,
     Grammatical,
-    Dictionary
+    Dictionary,
 }
 
-struct Language{
+struct Language {
     proto_language: ProtoLanguage,
     evolutions: Evolutions,
+    dictionary: Vec<DictionaryEntry>,
+}
+
+struct Syllable {
+    phonemes: Vec<Phoneme>,
+    stressed: bool,
+}
+
+struct DictionaryEntry {
+    word: Vec<Syllable>,
+    translation: String,
+    notes: String,
 }
 
 fn main() {
     let mut phonology: HashSet<Phoneme> = HashSet::new();
-    phonology.insert(Phoneme::PulmonicConsonant(PulmonicConsonant::VoicedBilabialNasal));
-    phonology.insert(Phoneme::PulmonicConsonant(PulmonicConsonant::VoicedLinguolabialNasal));
-    let proto_language = ProtoLanguage{
+    phonology.insert(Phoneme::VoicedBilabialNasal);
+    phonology.insert(Phoneme::VoicedLinguolabialNasal);
+
+    let mut dictionary = vec![];
+    dictionary.push(DictionaryEntry {
+        word: vec![Syllable {
+            phonemes: vec![Phoneme::VoicedBilabialNasal],
+            stressed: true,
+        }],
+        translation: "example".to_string(),
+        notes: "".to_string(),
+    });
+
+    let proto_language = ProtoLanguage {
         phonology,
+        dictionary,
     };
     println!("{:?}", proto_language.phonology);
 }
