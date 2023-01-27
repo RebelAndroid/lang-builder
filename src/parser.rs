@@ -5,18 +5,30 @@ use logos::{Logos, Lexer};
 #[derive(Logos, Debug, PartialEq)]
 enum Token{
     #[token("{")]
-    LeftBracket,
+    LeftCurlyBracket,
     #[token("}")]
-    RightBracket,
+    RightCurlyBracket,
+
+    #[token("[")]
+    LeftSquareBracket,
+    #[token("]")]
+    RightSquareBracket,
+
     #[token("where")]
     Where,
+
     #[token("=")]
     Equals,
-    #[token("_", priority = 2)]
+    #[token("_")]
     Underscore,
+    #[token(",")]
+    Comma,
 
-    #[regex(r"[^_\W]+", |lex| lex.slice().to_owned(), priority=1)]
-    Name(String),
+    #[regex(r"[^_\W]+", |lex| lex.slice().to_owned())]
+    Phoneme(String),
+
+    #[regex(r"\$[^_\W]+", |lex| lex.slice().to_owned())]
+    Variable(String),
 
     #[token("->")]
     Arrow,
@@ -27,7 +39,7 @@ enum Token{
 }
 
 pub fn test(){
-    let lex: Lexer<Token> = Token::lexer("where V_V {mʰ -> b c -> d}");
+    let lex: Lexer<Token> = Token::lexer(include_str!("../example.scl"));
     for i in lex {
         let a: Token = i;
         println!("i: {:?}", a);

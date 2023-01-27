@@ -1,0 +1,2 @@
+$vowel = [a e i o u]
+where $vowel_a {mʰ -> b c -> d}
