@@ -25,6 +25,18 @@ impl Debug for Phoneme {
         )
     }
 }
+impl TryFrom<&str> for Phoneme{
+    type Error = String; // TODO: proper error type
+
+    fn try_from(value: &str) -> Result<Self, Self::Error> {
+        match value{
+            "m" => Ok(Phoneme::VoicedBilabialNasal),
+            "m̥" => Ok(Phoneme::VoicelessBilabialNasal),
+            _ => Err(format!("invalid phoneme: {}", value)),
+        }
+    }
+}
+
 
 pub trait Romanize {
     fn romanize(word: Vec<Syllable>) -> Result<String, String>;
