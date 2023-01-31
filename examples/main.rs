@@ -2,12 +2,12 @@ use std::{
     collections::{HashSet},
 };
 
-use lang_builder::{Phoneme, DictionaryEntry, Syllable, ProtoLanguage, parser};
+use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser, phoneme::Phoneme};
 
 fn main() {
     let mut phonology: HashSet<Phoneme> = HashSet::new();
     phonology.insert(Phoneme::VoicedBilabialNasal);
-    phonology.insert(Phoneme::VoicedLinguolabialNasal);
+    // phonology.insert(Phoneme::VoicedLinguolabialNasal);
 
     let mut dictionary = vec![];
     dictionary.push(DictionaryEntry {

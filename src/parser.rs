@@ -1,6 +1,6 @@
 use std::fmt::Display;
 
-use crate::Phoneme;
+use crate::phoneme::Phoneme;
 use logos::{Lexer, Logos};
 use pom::{
     parser::{is_a, sym},
