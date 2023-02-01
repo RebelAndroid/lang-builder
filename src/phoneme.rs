@@ -150,15 +150,14 @@ phonemes!(
     VoicedAlveolarLateralFlap "ɺ",
     VoicedPalatalLateralFlap "ʎ̆",
     VoicedVelarLateralFlap "ʟ̆",
-
+    // vowels
+    CloseFrontUnroundedVowel "i",
+    CloseFrontRoundedVowel "y",
+    CloseCentralUnroundedVowel "ɨ",
+    CloseCentralRoundedVowel "ʉ",
+    CloseBackUnroundedVowel "ɯ",
+    CloseBackRoundedVowel "u",
+    ClosemidFrontUnroundedVowel "e",
+    ClosemidBackRoundedVowel "o",
+    OpenFrontUnroundedVowel "a",
 );
-
-#[cfg(test)]
-#[test]
-fn test() {
-    let x = Phoneme::VoicelessLinguolabialFricative;
-    println!("VoicelessLinguolabialFricative: {:?}", x);
-    let y: Result<Phoneme, String> = "m".try_into();
-    println!("m: {:?}", y);
-    assert!(false);
-}

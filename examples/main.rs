@@ -2,7 +2,8 @@ use std::{
     collections::{HashSet},
 };
 
-use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser, phoneme::Phoneme};
+use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser::{self, Token, sound_change}, phoneme::Phoneme};
+use logos::{Lexer, Logos};
 
 fn main() {
     let mut phonology: HashSet<Phoneme> = HashSet::new();
@@ -23,14 +24,11 @@ fn main() {
         phonology,
         dictionary,
     };
-    //println!("{:?}", proto_language.phonology);
-    parser::test();
 
-
-    // c -> g where {$vowel_$vowel, stress, /$vowel_/}
-    // statement = sound_change where constraint*
-    // sound_change = phoneme_set -> phoneme_set
-    // phoneme_set = {phoneme(,phoneme)*} | phoneme
-    // phoneme = [^\s,$_\}\{]+
-    
+    let mut lex: Lexer<Token> = Token::lexer(include_str!("../example.scl"));
+    let mut tokens: Vec<Token> = vec![];
+    while let Some(token) = lex.next() {
+        tokens.push(token);
+    }
+    println!("{:?}", sound_change().parse(&tokens));
 }
