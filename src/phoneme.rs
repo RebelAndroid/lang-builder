@@ -37,6 +37,7 @@ macro_rules! phonemes{
 }
 
 phonemes!(
+    //nasals
     VoicedBilabialNasal     "m",
     VoicelessBilabialNasal  "m̥",
     VoicedLabiodentalNasal  "ɱ",
@@ -50,6 +51,7 @@ phonemes!(
     VoicelessVelarNasal     "ŋ̊",
     VoiceledVelarNasal      "ŋ",
     VoicedUvularNasal       "ɴ",
+    // plosives
     VoicelessBilabalPlosive "p",
     VoicedBilabialPlosive   "b",
     VoicelessLabiodentalPlosive "p̪",
@@ -68,6 +70,7 @@ phonemes!(
     VoicedUvularPlosive "ɢ",
     EpiglottalPlosive "ʡ",
     GlottalStop "ʔ",
+    // sibilant fricatives
     VoicelessAlveolarSibilant "s",
     VoicedAlveolarSibilant "z",
     VoicelessPostalveolarSibilant "ʃ",
@@ -76,17 +79,86 @@ phonemes!(
     VoicedRetroflexSibilant "ʐ",
     VoicelessPalatalSibilant "ɕ",
     VoicedPalatalSibilant "ʑ",
+    // non-sibilant fricatives
     VoicelessBilabialFricative "ɸ",
     VoicedBilabialFricative "β",
     VoicelessLabiodentalFricative "f",
     VoicedLabiodentalFricative "v",
+    VoicelessLinguolabialFricative "θ̼",
+    VoicedLinguolabialFricative "ð̼",
+    VoicelessDentalFricative "θ",
+    VoicedDentalFricative "ð",
+    VoicelessAlveolarFricative "θ̠",
+    VoicedAlveolarFricative "ð̠",
+    VoicelessPostalveolarFricative "ɹ̠̊˔",
+    VoicedPostalveolarFricative "ɹ̠˔",
+    VoicelessRetroflexFricative "ɻ̊˔",
+    VoicedRetroflexFricative "ɻ˔",
+    VoicelessPalatalFricative "ç",
+    VoicedPalatalFricative "ʝ",
+    VoicelessVelarFricative "x",
+    VoicedVelarFricative "ɣ",
+    VoicelessUvularFricative "χ",
+    VoicedUvularFricative "ʁ",
+    VoicelessEpiglottalFricative "ħ",
+    VoicedEpiglottalFricative "ʕ",
+    VoicelessGlottalFricative "h",
+    VoicedGlottalFricative "ɦ",
+    // approximants
+    VoicedLabiodentalApproximant "ʋ",
+    VoicedAlveolarApproximant "ɹ",
+    VoicedRetroflexApproximant "ɻ",
+    VoicedPalatalApproximant "j",
+    VoicedVelarApproximant "ɰ",
+    CreakyVoicedGlottalApproximant "ʔ̞",
+    // taps/flaps
+    VoicedBilabialFlap "ⱱ̟",
+    VoicedLabiodentalFlap "ⱱ",
+    VoicedLinguolabialFlap "ɾ̼",
+    VoicelessAlveolarFlap "ɾ̥",
+    VoicedAlveolarFlap "ɾ",
+    VoicelessRetroflexFlap "ɽ̊",
+    VoicedRetroflexFlap "ɽ",
+    VoicedUvularFlap "ɢ̆",
+    VoicedEpiglottalFlap "ʡ̆",
+    // trills
+    VoicelessBilabialTrill "ʙ̥",
+    VoicedBilabialTrill "ʙ",
+    VoicelessAlveolarTrill "r̥",
+    VoicedAlveolarTrill "r",
+    VoicelessRetroflexTrill "ɽ̊r̥",
+    VoicedRetroflexTrill "ɽr",
+    VoicelessUvularTrill "ʀ̥",
+    VoicedUvularTrill "ʀ",
+    VoicelessEpiglottalTrill "ʜ",
+    VoicedEpiglottalTrill "ʢ",
+    // lateral fricatives
+    VoicelessAlveolarLateralFricative "ɬ",
+    VoicedAlveolarLateralFricative "ɮ",
+    VoicelessRetroflexLateralFricative "ꞎ",
+    VoicedRetroflexLateralFricative "ɭ˔",
+    VoicedPalatalLateralFricative "ʎ̝",
+    VoicedVelarLateralFricative "ʟ̝",
+    // lateral approximants
+    VoicedAlveolarLateralApproximant "l",
+    VoicedRetroflexLateralApproximant "ɭ",
+    VoicedPalatalLateralApproximant "ʎ",
+    VoicedVelarLateralApproximant "ʟ",
+    VoicedUvularLateralApproximant "ʟ̠",
+    // lateral taps/flaps
+    VoicelessAlveolarLateralFlap "ɺ̥",
+    VoicedAlveolarLateralFlap "ɺ",
+    VoicedPalatalLateralFlap "ʎ̆",
+    VoicedVelarLateralFlap "ʟ̆",
+
 );
 
 #[cfg(test)]
 #[test]
 fn test() {
-    let x = Phoneme::VoicedBilabialNasal;
-    println!("VociedBilabialNasal: {:?}", x);
+    let x = Phoneme::VoicelessLinguolabialFricative;
+    println!("VoicelessLinguolabialFricative: {:?}", x);
     let y: Result<Phoneme, String> = "m".try_into();
     println!("m: {:?}", y);
+    assert!(false);
 }
