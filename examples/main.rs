@@ -2,7 +2,7 @@ use std::{
     collections::{HashSet},
 };
 
-use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser::{self, Token, sound_change, variable_assignment}, phoneme::Phoneme};
+use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser::{Token, variable_assignment}, phoneme::Phoneme};
 use logos::{Lexer, Logos};
 
 fn main() {
@@ -24,6 +24,7 @@ fn main() {
         phonology,
         dictionary,
     };
+    println!("Protolanguage: {:?}", proto_language);
 
     let mut lex: Lexer<Token> = Token::lexer(include_str!("../example.scl"));
     let mut tokens: Vec<Token> = vec![];

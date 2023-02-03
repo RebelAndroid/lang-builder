@@ -11,6 +11,7 @@ pub trait Romanize {
     fn romanize(word: Vec<Syllable>) -> Result<String, String>;
 }
 
+#[derive(Debug)]
 pub struct ProtoLanguage {
     pub phonology: HashSet<Phoneme>,
     pub dictionary: Vec<DictionaryEntry>,
@@ -28,11 +29,13 @@ pub struct Language {
     pub dictionary: Vec<DictionaryEntry>,
 }
 
+#[derive(Debug)]
 pub struct Syllable {
     pub phonemes: Vec<Phoneme>,
     pub stressed: bool,
 }
 
+#[derive(Debug)]
 pub struct DictionaryEntry {
     pub word: Vec<Syllable>,
     pub translation: String,
