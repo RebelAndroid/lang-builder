@@ -1,1 +1,1 @@
-$Vowels = [a, e, i, o, u]
+where $vowel_a {ʃ -> ɾ̼ c -> d}

@@ -69,17 +69,57 @@ impl Display for Token {
 
 #[derive(Debug)]
 pub struct SoundChange {
+    pub case: Vec<CaseItem>,
+    pub changes: Vec<PhonemeChange>,
+}
+
+#[derive(Debug)]
+pub enum CaseItem {
+    Underscore,
+    Phoneme(Phoneme),
+    Variable(String),
+}
+
+pub fn sound_change<'a>() -> Parser<'a, Token, SoundChange> {
+    let case = (is_a(|x: Token| matches!(x, Token::Variable(_))).map(|v| match v{
+        Token::Variable(s) => CaseItem::Variable(s),
+        _ => unreachable!()
+    })
+        | is_a(|x: Token| matches!(x, Token::Phoneme(_))).map(|p| match p{
+            Token::Phoneme(p) => CaseItem::Variable(p.as_str().try_into().unwrap()),
+            _ => unreachable!()
+        })
+        | is_a(|x: Token| matches!(x, Token::Underscore)).map(|_| CaseItem::Underscore))
+    .repeat(0..);
+    let change = is_a(|x: Token| matches!(x, Token::Where))
+        * case
+        + is_a(|x: Token| matches!(x, Token::LeftCurlyBracket))
+        * list(
+            phoneme_change(),
+            is_a(|x: Token| matches!(x, Token::Comma)).opt(),
+        )
+        - is_a(|x: Token| matches!(x, Token::RightCurlyBracket));
+    change.convert(|(case, changes)| {
+        Ok::<SoundChange, String>(SoundChange {
+            case,
+            changes,
+        })
+    })
+}
+
+#[derive(Debug)]
+pub struct PhonemeChange {
     pub start: Phoneme,
     pub end: Phoneme,
 }
 
-pub fn sound_change<'a>() -> Parser<'a, Token, SoundChange> {
+pub fn phoneme_change<'a>() -> Parser<'a, Token, PhonemeChange> {
     let change = is_a(|x: Token| matches!(x, Token::Phoneme(_)))
         + is_a(|x: Token| x == Token::Arrow)
         + is_a(|x: Token| matches!(x, Token::Phoneme(_)));
     let x = change.collect();
     x.convert(|tokens| {
-        Ok::<SoundChange, String>(SoundChange {
+        Ok::<PhonemeChange, String>(PhonemeChange {
             start: match &tokens[0] {
                 Token::Phoneme(s) => s.as_str().try_into()?,
                 _ => unreachable!(),
@@ -99,15 +139,15 @@ pub struct VariableAssignment {
 }
 
 pub fn variable_assignment<'a>() -> Parser<'a, Token, VariableAssignment> {
-    let assignemnt = is_a(|x: Token| matches!(x, Token::Variable(_)))
+    let assignment = is_a(|x: Token| matches!(x, Token::Variable(_)))
         + is_a(|x: Token| x == Token::Equals)
         + is_a(|x: Token| x == Token::LeftSquareBracket)
         + list(
             is_a(|x: Token| matches!(x, Token::Phoneme(_))),
-            sym(Token::Comma),
+            sym(Token::Comma).opt(),
         )
         + is_a(|x: Token| x == Token::RightSquareBracket);
-    let y = assignemnt.collect();
+    let y = assignment.collect();
     y.convert(|tokens| {
         Ok::<VariableAssignment, String>(VariableAssignment {
             name: if let Token::Variable(x) = &tokens[0] {
