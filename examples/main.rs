@@ -2,7 +2,7 @@ use std::{
     collections::{HashSet},
 };
 
-use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser::{self, Token, sound_change}, phoneme::Phoneme};
+use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser::{self, Token, sound_change, variable_assignment}, phoneme::Phoneme};
 use logos::{Lexer, Logos};
 
 fn main() {
@@ -30,5 +30,5 @@ fn main() {
     while let Some(token) = lex.next() {
         tokens.push(token);
     }
-    println!("{:?}", sound_change().parse(&tokens));
+    println!("{:?}", variable_assignment().parse(&tokens));
 }
