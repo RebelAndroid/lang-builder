@@ -1,7 +1,7 @@
 // use std::fmt::Debug;
 macro_rules! phonemes{
     ($($name:ident $symbol:expr,)+) => {
-        #[derive(PartialEq, Eq, Hash)]
+        #[derive(PartialEq, Eq, Hash, Clone)]
         pub enum Phoneme{
             $(
                 #[doc=$symbol]

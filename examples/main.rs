@@ -2,7 +2,7 @@ use std::{
     collections::{HashSet},
 };
 
-use lang_builder::{DictionaryEntry, Syllable, ProtoLanguage, parser::{Token, variable_assignment, sound_change}, phoneme::Phoneme};
+use lang_builder::{DictionaryEntry, Syllable, parser::{Token, sound_change}, phoneme::Phoneme, Language};
 use logos::{Lexer, Logos};
 
 fn main() {
@@ -10,19 +10,22 @@ fn main() {
     phonology.insert(Phoneme::VoicedBilabialNasal);
     // phonology.insert(Phoneme::VoicedLinguolabialNasal);
 
-    let mut dictionary = vec![];
-    dictionary.push(DictionaryEntry {
+    let mut dictionary = HashSet::new();
+    dictionary.insert(DictionaryEntry {
         word: vec![Syllable {
             phonemes: vec![Phoneme::VoicedBilabialNasal],
             stressed: true,
         }],
-        translation: "example".to_string(),
+        definition: "example".to_string(),
         notes: "".to_string(),
     });
+    let mut grammar = HashSet::new();
+    grammar.insert("inflect it or something, I don't know".to_string());
 
-    let proto_language = ProtoLanguage {
+    let proto_language = Language {
         phonology,
         dictionary,
+        grammar
     };
     println!("Protolanguage: {:?}", proto_language);
 
