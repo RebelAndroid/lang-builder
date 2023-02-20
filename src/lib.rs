@@ -28,21 +28,23 @@ pub struct LanguageHistory {
 }
 
 impl LanguageHistory {
-    fn get_snapshot(&self, last_evolution: usize) -> Language {
+    pub fn get_snapshot(&self, last_evolution: usize) -> Language {
         if last_evolution >= self.evolutions.len() {
             panic!();
         }
         let mut current = self.proto_language.clone();
-        for i in 0..last_evolution {
-            match self.evolutions[i] {
-                Evolution::Phonetic(_) => todo!(),
-                Evolution::Grammatical(_) => todo!(),
-                Evolution::Dictionary(_) => todo!(),
+        for i in 0..last_evolution + 1{
+            match &self.evolutions[i] {
+                Evolution::Phonetic(sound_change) => todo!(),
+                Evolution::Grammatical(grammatical_evolution) => todo!(),
+                Evolution::Dictionary(dictionary_evolution) => {
+                    dictionary_evolution.apply(&mut current)
+                }
             }
         }
         current
     }
-    fn get_current(&self) -> Language {
+    pub fn get_current(&self) -> Language {
         self.get_snapshot(self.evolutions.len() - 1)
     }
 }
@@ -83,6 +85,18 @@ impl DictionaryEvolution {
             start: Some(start),
             end: Some(end),
         }
+    }
+
+    pub fn apply(&self, language: &mut Language) {
+        match (&self.start, &self.end) {
+            (None, None) => unreachable!(),
+            (None, Some(entry)) => language.dictionary.insert(entry.clone()),
+            (Some(entry), None) => language.dictionary.remove(entry),
+            (Some(start), Some(end)) => {
+                language.dictionary.remove(start);
+                language.dictionary.insert(end.clone())
+            },
+        };
     }
 }
 
