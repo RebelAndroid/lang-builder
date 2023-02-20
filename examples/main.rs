@@ -1,8 +1,11 @@
-use std::{
-    collections::{HashSet},
-};
+use std::collections::HashSet;
 
-use lang_builder::{DictionaryEntry, Syllable, parser::{Token, sound_change}, phoneme::Phoneme, Language, LanguageHistory, Evolution, DictionaryEvolution};
+use lang_builder::{
+    parser::{sound_change, Token},
+    phoneme::Phoneme,
+    DictionaryEntry, DictionaryEvolution, Evolution, GrammaticalEvolution, Language,
+    LanguageHistory, Syllable,
+};
 use logos::{Lexer, Logos};
 use pom::set::Set;
 
@@ -25,16 +28,28 @@ fn main() {
     let proto_language = Language {
         phonology,
         dictionary,
-        grammar
+        grammar,
     };
     println!("Protolanguage: {:?}", proto_language);
 
-    let language_history = LanguageHistory{
+    let language_history = LanguageHistory {
         proto_language,
-        evolutions: vec![Evolution::Dictionary(DictionaryEvolution::add(DictionaryEntry{ word: vec![Syllable {
-            phonemes: vec![Phoneme::VoicedAlveolarNasal],
-            stressed: true,
-        }], definition: "todo!()".to_string(), notes: "".to_string() }))],
+        evolutions: vec![
+            Evolution::Dictionary(DictionaryEvolution::add(DictionaryEntry {
+                word: vec![Syllable {
+                    phonemes: vec![Phoneme::VoicedAlveolarNasal],
+                    stressed: true,
+                }],
+                definition: "todo!()".to_string(),
+                notes: "".to_string(),
+            })),
+            // Evolution::Grammatical(GrammaticalEvolution::add("How many grammatical numbers? Yes.".to_string())),
+            // Evolution::Grammatical(GrammaticalEvolution::remove("inflect it or something, I don't know".to_string())),
+            Evolution::Grammatical(GrammaticalEvolution::replace(
+                "inflect it or something, I don't know".to_string(),
+                "How many grammatical numbers? Yes.".to_string(),
+            )),
+        ],
     };
 
     let modern_language = language_history.get_current();

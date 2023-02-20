@@ -33,12 +33,20 @@ impl LanguageHistory {
             panic!();
         }
         let mut current = self.proto_language.clone();
-        for i in 0..last_evolution + 1{
+        for i in 0..last_evolution + 1 {
             match &self.evolutions[i] {
                 Evolution::Phonetic(sound_change) => todo!(),
-                Evolution::Grammatical(grammatical_evolution) => todo!(),
+                Evolution::Grammatical(grammatical_evolution) => {
+                    match grammatical_evolution.apply(&mut current) {
+                        Ok(_) => {},
+                        Err(e) => panic!("{}", e),
+                    }
+                }
                 Evolution::Dictionary(dictionary_evolution) => {
-                    dictionary_evolution.apply(&mut current)
+                    match dictionary_evolution.apply(&mut current) {
+                        Ok(_) => {},
+                        Err(e) => panic!("{}", e),
+                    }
                 }
             }
         }
@@ -69,38 +77,109 @@ pub struct DictionaryEvolution {
 }
 impl DictionaryEvolution {
     pub fn add(entry: DictionaryEntry) -> Self {
-        DictionaryEvolution {
+        Self {
             start: None,
             end: Some(entry),
         }
     }
     pub fn remove(entry: DictionaryEntry) -> Self {
-        DictionaryEvolution {
+        Self {
             start: Some(entry),
             end: None,
         }
     }
     pub fn replace(start: DictionaryEntry, end: DictionaryEntry) -> Self {
-        DictionaryEvolution {
+        Self {
             start: Some(start),
             end: Some(end),
         }
     }
 
-    pub fn apply(&self, language: &mut Language) {
+    pub fn apply(&self, language: &mut Language) -> Result<(), String>{
         match (&self.start, &self.end) {
             (None, None) => unreachable!(),
-            (None, Some(entry)) => language.dictionary.insert(entry.clone()),
-            (Some(entry), None) => language.dictionary.remove(entry),
+            (None, Some(entry)) => {
+                if !language.dictionary.insert(entry.clone()) {
+                    return Result::Err(format!("unable to add dictionary entry: {:?}", entry));
+                }
+            }
+            (Some(entry), None) => {
+                if !language.dictionary.remove(entry) {
+                    return Result::Err(format!("unable to remove dictionary entry: {:?}", entry));
+                }
+            }
             (Some(start), Some(end)) => {
-                language.dictionary.remove(start);
-                language.dictionary.insert(end.clone())
-            },
+                if !language.dictionary.remove(start) {
+                    return Result::Err(format!(
+                        "unable to remove dictionary entry {:?} for replacement",
+                        start
+                    ));
+                };
+                if !language.dictionary.insert(end.clone()) {
+                    return Result::Err(format!(
+                        "unable to insert dictionary entry {:?} for replacement",
+                        end
+                    ));
+                };
+            }
         };
+        return Result::Ok(());
     }
 }
 
 pub struct GrammaticalEvolution {
     start: Option<String>,
     end: Option<String>,
+}
+
+impl GrammaticalEvolution {
+    pub fn add(entry: String) -> Self {
+        Self {
+            start: None,
+            end: Some(entry),
+        }
+    }
+    pub fn remove(entry: String) -> Self {
+        Self {
+            start: Some(entry),
+            end: None,
+        }
+    }
+    pub fn replace(start: String, end: String) -> Self {
+        Self {
+            start: Some(start),
+            end: Some(end),
+        }
+    }
+
+    pub fn apply(&self, language: &mut Language) -> Result<(), String> {
+        match (&self.start, &self.end) {
+            (None, None) => unreachable!(),
+            (None, Some(entry)) => {
+                if !language.grammar.insert(entry.clone()) {
+                    return Result::Err(format!("unable to add grammatical entry: {}", entry));
+                }
+            }
+            (Some(entry), None) => {
+                if !language.grammar.remove(entry) {
+                    return Result::Err(format!("unable to remove grammatical entry: {}", entry));
+                }
+            }
+            (Some(start), Some(end)) => {
+                if !language.grammar.remove(start) {
+                    return Result::Err(format!(
+                        "unable to remove grammatical entry {} for replacement",
+                        start
+                    ));
+                };
+                if !language.grammar.insert(end.clone()) {
+                    return Result::Err(format!(
+                        "unable to insert grammatical entry {} for replacement",
+                        end
+                    ));
+                };
+            }
+        };
+        return Result::Ok(());
+    }
 }
